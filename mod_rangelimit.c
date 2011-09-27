@@ -1,5 +1,6 @@
 #include "mod_rangelimit.h"
-#define DEBUG_FIXRANGE
+
+// Module version: 0.4
 
 module AP_MODULE_DECLARE_DATA rangelimit_module;
 
@@ -41,18 +42,15 @@ static int range_handler(request_rec *r) {
 	int ends[60];
 
     if (!range_header || strncasecmp(range_header, "bytes=", 6) || r->status != HTTP_OK ) {
-#ifdef DEBUG_FIXRANGE
-		ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, "mod_rangelimit: no range found" );
-#endif
+		if (r->server->loglevel == APLOG_DEBUG)
+			ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, "mod_rangelimit: no range found" );
         return OK;
 	}
-#ifdef DEBUG_FIXRANGE
-//	ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, "mod_rangelimit: Range header: %s", range_header);
-#endif
+//	if (r->server->loglevel == APLOG_DEBUG)
+//		ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, "mod_rangelimit: Range header: %s", range_header);
     if (!ap_strchr_c(range_header, ',')) {
-#ifdef DEBUG_FIXRANGE
-		ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, "mod_rangelimit: single range, nothing to do here");
-#endif
+		if (r->server->loglevel == APLOG_DEBUG)
+			ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, "mod_rangelimit: single range, nothing to do here");
 		return OK;
 	}
     // multiple ranges
@@ -60,11 +58,10 @@ static int range_handler(request_rec *r) {
 	ranges++;			// move the pointer to the begining of the first range
 	// start walking over the ranges
 	while ( sscanf(ranges, "%11d-%11d%n", &start, &end, &n) >= 1 ) {
-#ifdef DEBUG_FIXRANGE
-		ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r,
-			"mod_rangelimit: range_num: %d overpalpping: %d start: %d end: %d n: %d",
-			range_num, range_overlaps, start, end, n);
-#endif
+		if (r->server->loglevel == APLOG_DEBUG)
+			ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r,
+				"mod_rangelimit: range_num: %d overpalpping: %d start: %d end: %d n: %d",
+				range_num, range_overlaps, start, end, n);
 		if (start < 0) {
 			ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r,
 				"mod_rangelimit: requested range(%d-%d) not satisfiable", start, end);
