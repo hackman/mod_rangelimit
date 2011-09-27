@@ -1,0 +1,18 @@
+This module aims to provide protection from the DoS attacks using the Range header in Apache.
+
+It does so by analyzing the ranges supplied in the Range header.
+
+It is checking the headers before mod_setenvif and if there is even one invalid range in the request the whole request is declined.
+
+The module also checks the number of supplied ranges and the number of overlapping ranges.
+
+The module provides two options:
+  MaxRanges
+  MaxOverlappingRanges
+
+By default the module is configured with the following values:
+  MaxRanges - 20
+  MaxOverlappingRanges - 5
+
+
+For more information and comments <mm@yuhu.biz>
