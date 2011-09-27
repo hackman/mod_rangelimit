@@ -79,7 +79,7 @@ static int range_handler(request_rec *r) {
 		return OK;
 	}
     // multiple ranges
-#ifdef APACHE
+#ifdef APACHE2
 	ranges = ap_strchr_c(range_header, '=');
 #else
 	ranges = strchr(range_header, '=');
