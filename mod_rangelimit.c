@@ -13,10 +13,11 @@ typedef struct {
 	int max_overlaps;
 } ranges_server_conf;
 
-static void *create_rangelim_config(apr_pool_t *p, server_rec *s) {
 #ifdef APACHE2
+static void *create_rangelim_config(apr_pool_t *p, server_rec *s) {
     ranges_server_conf *cfg = (ranges_server_conf *) apr_pcalloc(p, sizeof(ranges_server_conf));
 #else
+static void *create_rangelim_config(pool *p, server_rec *s) {
     ranges_server_conf *cfg = (ranges_server_conf *) ap_pcalloc(p, sizeof(ranges_server_conf));
 #endif
     cfg->max_ranges = 20;
@@ -40,7 +41,7 @@ static int range_handler(request_rec *r) {
 #ifdef APACHE2
 	const char *range_header = apr_table_get(r->headers_in, "Range");
 #else
-	const char *range_header = apr_table_get(r->headers_in, "Range");
+	const char *range_header = ap_table_get(r->headers_in, "Range");
 #endif
     ranges_server_conf *cfg = ap_get_module_config(r->server->module_config, &rangelimit_module);
 	int range_num = 0;			// counter of the number of checked ranges
