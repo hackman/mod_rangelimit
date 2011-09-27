@@ -81,7 +81,7 @@ static int range_handler(request_rec *r) {
 #ifdef APACHE
 	ranges = ap_strchr_c(range_header, '=');
 #else
-	anges = strchr(range_header, '=');
+	ranges = strchr(range_header, '=');
 #endif
 	ranges++;			// move the pointer to the begining of the first range
 	// start walking over the ranges
