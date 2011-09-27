@@ -1,7 +1,3 @@
-#ifndef APACHE_RELEASE
-#define APACHE2
-#endif
-
 #include <stdio.h>
 #include <string.h>
 
@@ -12,6 +8,10 @@
 #include "http_main.h"
 #include "http_protocol.h"
 #include "util_script.h"
+
+#ifndef APACHE_RELEASE
+#define APACHE2
+#endif
 
 #ifdef APACHE2
 #include <strings.h>
