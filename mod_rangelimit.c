@@ -69,7 +69,11 @@ static int range_handler(request_rec *r) {
 //#else
 //		ap_log_rerror(APLOG_MARK, APLOG_NOERRNO|APLOG_NOTICE, r, "mod_rangelimit: Range header: %s", range_header);
 //#endif
+#ifdef APACHE2
     if (!ap_strchr_c(range_header, ',')) {
+#else
+    if (!strchr(range_header, ',')) {
+#endif
 		if (r->server->loglevel == APLOG_DEBUG)
 #ifdef APACHE2
 			ap_log_rerror(APLOG_MARK, APLOG_NOTICE, 0, r, "mod_rangelimit: single range, nothing to do here");
